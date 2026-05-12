@@ -11,12 +11,23 @@
 </head>
 <body>
   <script is:inline>
-    var CMS_CONFIG = {
+    // 使用 GitHub Token 直接认证
+    var GITHUB_TOKEN = localStorage.getItem("decap-cms-token");
+    
+    if (!GITHUB_TOKEN) {
+      GITHUB_TOKEN = prompt("请输入你的 GitHub Token (ghp_开头):");
+      if (GITHUB_TOKEN) {
+        localStorage.setItem("decap-cms-token", GITHUB_TOKEN);
+      }
+    }
+    
+    window.CMS_CONFIG = {
       backend: {
         name: "github",
         repo: "xiaochai777/Firefly",
         branch: "master",
-        base_url: "https://decap-oauth.netlify.app"
+        auth_type: "token",
+        token: GITHUB_TOKEN
       },
       media_folder: "src/content/posts/images",
       public_folder: "/posts/images",
@@ -40,12 +51,16 @@
         ]
       }]
     };
-    window.CMS_CONFIG = CMS_CONFIG;
+    
     window.CMS_MANUAL_INIT = true;
   </script>
   <script is:inline src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script is:inline>
-    CMS.init({config: CMS_CONFIG});
+    if (GITHUB_TOKEN) {
+      CMS.init({config: window.CMS_CONFIG});
+    } else {
+      document.body.innerHTML = "<h2>需要 GitHub Token 才能使用</h2><p>请刷新页面并输入 Token</p>";
+    }
   </script>
 </body>
 </html>

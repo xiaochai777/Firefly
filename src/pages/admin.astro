@@ -1,5 +1,5 @@
 ---
-// Admin CMS page - 使用 Static CMS
+// 博客管理后台
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -8,42 +8,263 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>博客管理后台</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; }
+    .login-box { max-width: 400px; margin: 100px auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); text-align: center; }
+    .login-box h2 { margin-bottom: 20px; color: #333; }
+    .login-box input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+    .login-box button { width: 100%; padding: 12px; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+    .login-box button:hover { background: #4f46e5; }
+    .dashboard { max-width: 900px; margin: 20px auto; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header h1 { color: #333; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #6366f1; color: #fff; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #333; }
+    .post-list { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+    .post-item { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+    .post-item:last-child { border-bottom: none; }
+    .post-title { font-weight: 600; color: #333; }
+    .post-date { color: #999; font-size: 13px; }
+    .editor { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .editor input, .editor textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 14px; font-family: inherit; }
+    .editor textarea { min-height: 400px; resize: vertical; }
+    .editor label { font-weight: 600; color: #555; margin-bottom: 4px; display: block; }
+    .actions { display: flex; gap: 10px; margin-top: 16px; }
+    .hidden { display: none; }
+    .msg { padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+    .msg-ok { background: #d1fae5; color: #065f46; }
+    .msg-err { background: #fee2e2; color: #991b1b; }
+    .loading { text-align: center; padding: 40px; color: #999; }
+  </style>
 </head>
 <body>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/@staticcms/app@^4.0.0/dist/staticcms-app.js"></script>
+  <!-- 登录界面 -->
+  <div id="loginView" class="login-box">
+    <h2>🔐 博客管理后台</h2>
+    <p style="color:#666;margin-bottom:20px;">输入 GitHub Token 登录</p>
+    <input type="password" id="tokenInput" placeholder="ghp_开头的 Token" />
+    <button onclick="doLogin()">登录</button>
+    <p id="loginErr" style="color:red;margin-top:10px;" class="hidden"></p>
+  </div>
+
+  <!-- 仪表盘 -->
+  <div id="dashboardView" class="dashboard hidden">
+    <div class="header">
+      <h1>📝 博客管理</h1>
+      <div>
+        <button class="btn btn-primary" onclick="showEditor()">+ 写文章</button>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+      </div>
+    </div>
+    <div id="msg" class="hidden"></div>
+    <div id="postList" class="post-list"><div class="loading">加载中...</div></div>
+  </div>
+
+  <!-- 编辑器 -->
+  <div id="editorView" class="dashboard hidden">
+    <div class="editor">
+      <h2 style="margin-bottom:20px;">✍️ <span id="editorTitle">写新文章</span></h2>
+      <div id="editorMsg" class="hidden"></div>
+      <label>标题</label>
+      <input type="text" id="postTitle" placeholder="文章标题" />
+      <label>文件名（英文）</label>
+      <input type="text" id="postSlug" placeholder="my-first-post" />
+      <label>发布日期</label>
+      <input type="date" id="postDate" />
+      <label>描述</label>
+      <input type="text" id="postDesc" placeholder="文章简介" />
+      <label>标签（逗号分隔）</label>
+      <input type="text" id="postTags" placeholder="日常, 生活" />
+      <label>正文（Markdown）</label>
+      <textarea id="postBody" placeholder="在这里写文章内容..."></textarea>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="savePost()">发布</button>
+        <button class="btn btn-secondary" onclick="showDashboard()">返回</button>
+      </div>
+    </div>
+  </div>
+
   <script is:inline>
-    CMS.init({
-      config: {
-        backend: {
-          name: "github",
-          repo: "xiaochai777/Firefly",
-          branch: "master",
-          auth_type: "token",
-          base_url: "https://firefly-red.vercel.app"
-        },
-        media_folder: "src/content/posts/images",
-        public_folder: "/posts/images",
-        collections: [{
-          name: "posts",
-          label: "文章",
-          folder: "src/content/posts",
-          create: true,
-          slug: "{{slug}}",
-          path: "{{slug}}",
-          media_folder: "images",
-          public_folder: "./images",
-          fields: [
-            {label: "标题", name: "title", widget: "string"},
-            {label: "发布日期", name: "published", widget: "datetime"},
-            {label: "描述", name: "description", widget: "string", required: false},
-            {label: "封面图", name: "image", widget: "image", required: false},
-            {label: "标签", name: "tags", widget: "list", required: false},
-            {label: "分类", name: "category", widget: "string", required: false},
-            {label: "正文", name: "body", widget: "markdown"}
-          ]
-        }]
+    const REPO = "xiaochai777/Firefly";
+    const BRANCH = "master";
+    const POSTS_PATH = "src/content/posts";
+    let currentToken = localStorage.getItem("gh_token");
+    let editingFile = null;
+
+    // 检查是否已登录
+    if (currentToken) {
+      showDashboard();
+    }
+
+    function doLogin() {
+      const token = document.getElementById("tokenInput").value.trim();
+      if (!token) return;
+      // 验证 token
+      fetch("https://api.github.com/user", {
+        headers: { "Authorization": "token " + token }
+      }).then(r => {
+        if (!r.ok) throw new Error("Token 无效");
+        return r.json();
+      }).then(user => {
+        localStorage.setItem("gh_token", token);
+        currentToken = token;
+        showDashboard();
+      }).catch(e => {
+        document.getElementById("loginErr").textContent = "❌ " + e.message;
+        document.getElementById("loginErr").classList.remove("hidden");
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("gh_token");
+      currentToken = null;
+      location.reload();
+    }
+
+    function showDashboard() {
+      document.getElementById("loginView").classList.add("hidden");
+      document.getElementById("editorView").classList.add("hidden");
+      document.getElementById("dashboardView").classList.remove("hidden");
+      loadPosts();
+    }
+
+    function showEditor(file) {
+      editingFile = file || null;
+      document.getElementById("dashboardView").classList.add("hidden");
+      document.getElementById("editorView").classList.remove("hidden");
+      document.getElementById("editorTitle").textContent = file ? "编辑文章" : "写新文章";
+      if (file) {
+        document.getElementById("postTitle").value = file.title || "";
+        document.getElementById("postSlug").value = file.name.replace(".md", "");
+        document.getElementById("postSlug").disabled = true;
+        document.getElementById("postDate").value = file.published || "";
+        document.getElementById("postDesc").value = file.description || "";
+        document.getElementById("postTags").value = (file.tags || []).join(", ");
+        document.getElementById("postBody").value = file.body || "";
+      } else {
+        document.getElementById("postTitle").value = "";
+        document.getElementById("postSlug").value = "";
+        document.getElementById("postSlug").disabled = false;
+        document.getElementById("postDate").value = new Date().toISOString().split("T")[0];
+        document.getElementById("postDesc").value = "";
+        document.getElementById("postTags").value = "";
+        document.getElementById("postBody").value = "";
       }
-    });
+    }
+
+    function showMsg(id, text, ok) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = "msg " + (ok ? "msg-ok" : "msg-err");
+      el.classList.remove("hidden");
+      setTimeout(() => el.classList.add("hidden"), 3000);
+    }
+
+    async function api(path, method, body) {
+      const opts = {
+        method: method || "GET",
+        headers: {
+          "Authorization": "token " + currentToken,
+          "Accept": "application/vnd.github.v3+json"
+        }
+      };
+      if (body) opts.body = JSON.stringify(body);
+      const r = await fetch("https://api.github.com/repos/" + REPO + "/contents/" + path, opts);
+      if (!r.ok) {
+        const err = await r.json();
+        throw new Error(err.message || "API Error");
+      }
+      return r.json();
+    }
+
+    async function loadPosts() {
+      try {
+        const files = await api(POSTS_PATH);
+        const mdFiles = files.filter(f => f.name.endsWith(".md") && f.name !== "_draft.md");
+        const listEl = document.getElementById("postList");
+        if (mdFiles.length === 0) {
+          listEl.innerHTML = '<div class="loading">还没有文章，点击"写文章"开始吧！</div>';
+          return;
+        }
+        let html = "";
+        for (const f of mdFiles) {
+          html += '<div class="post-item"><div><div class="post-title">' + f.name.replace(".md","") + '</div></div><div><button class="btn btn-secondary" onclick="editPost(\'' + f.path + '\',\'' + f.sha + '\')">编辑</button> <button class="btn btn-danger" onclick="deletePost(\'' + f.path + '\',\'' + f.sha + '\',\'' + f.name + '\')">删除</button></div></div>';
+        }
+        listEl.innerHTML = html;
+      } catch (e) {
+        document.getElementById("postList").innerHTML = '<div class="msg msg-err">加载失败: ' + e.message + '</div>';
+      }
+    }
+
+    async function editPost(path, sha) {
+      try {
+        const data = await api(path);
+        const content = atob(data.content.replace(/\n/g, ""));
+        // Parse frontmatter
+        const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        let title = "", published = "", description = "", tags = [], body = content;
+        if (match) {
+          const fm = match[1];
+          body = match[2];
+          const t = fm.match(/title:\s*"?([^"\n]+)"?/);
+          const p = fm.match(/published:\s*(.+)/);
+          const d = fm.match(/description:\s*"?([^"\n]+)"?/);
+          const tg = fm.match(/tags:\s*\[([^\]]*)\]/);
+          if (t) title = t[1].trim();
+          if (p) published = p[1].trim();
+          if (d) description = d[1].trim();
+          if (tg) tags = tg[1].split(",").map(s => s.trim().replace(/"/g,""));
+        }
+        showEditor({ name: path.split("/").pop(), title, published, description, tags, body, sha, path });
+      } catch (e) {
+        showMsg("msg", "加载失败: " + e.message, false);
+      }
+    }
+
+    async function savePost() {
+      const title = document.getElementById("postTitle").value.trim();
+      const slug = document.getElementById("postSlug").value.trim();
+      const date = document.getElementById("postDate").value;
+      const desc = document.getElementById("postDesc").value.trim();
+      const tags = document.getElementById("postTags").value.trim();
+      const body = document.getElementById("postBody").value;
+      if (!title || !slug) { showMsg("editorMsg", "标题和文件名不能为空", false); return; }
+
+      const tagsYaml = tags ? "[" + tags.split(",").map(t => '"' + t.trim() + '"').join(", ") + "]" : "[]";
+      const content = '---\ntitle: "' + title + '"\npublished: ' + date + '\ndescription: "' + desc + '"\ntags: ' + tagsYaml + '\n---\n' + body;
+      const encoded = btoa(unescape(encodeURIComponent(content)));
+
+      try {
+        const filePath = POSTS_PATH + "/" + slug + ".md";
+        let sha = editingFile ? editingFile.sha : null;
+        if (!sha) {
+          // Check if file exists
+          try { const existing = await api(filePath); sha = existing.sha; } catch(e) {}
+        }
+        const payload = { message: (editingFile ? "update" : "new post") + ": " + title, content: encoded };
+        if (sha) payload.sha = sha;
+        await api(filePath, "PUT", payload);
+        showMsg("editorMsg", "✅ 保存成功！", true);
+        editingFile = null;
+        setTimeout(() => showDashboard(), 1000);
+      } catch (e) {
+        showMsg("editorMsg", "❌ 保存失败: " + e.message, false);
+      }
+    }
+
+    async function deletePost(path, sha, name) {
+      if (!confirm("确定删除 " + name + " 吗？")) return;
+      try {
+        await api(path, "DELETE", { message: "delete: " + name, sha: sha });
+        showMsg("msg", "✅ 已删除", true);
+        loadPosts();
+      } catch (e) {
+        showMsg("msg", "删除失败: " + e.message, false);
+      }
+    }
   </script>
 </body>
 </html>

@@ -9,35 +9,39 @@
   <meta name="robots" content="noindex" />
   <title>Blog Admin</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f5f5; }
-    .login-box { max-width: 400px; margin: 100px auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); text-align: center; }
-    .login-box h2 { margin-bottom: 20px; color: #333; }
-    .login-box p { color: #666; margin-bottom: 20px; }
-    .login-box input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
-    .login-box button { width: 100%; padding: 12px; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-    .login-box button:hover { background: #4f46e5; }
-    .dashboard { max-width: 900px; margin: 20px auto; padding: 20px; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .header h1 { color: #333; }
-    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin: 2px; }
-    .btn-primary { background: #6366f1; color: #fff; }
-    .btn-danger { background: #ef4444; color: #fff; }
-    .btn-secondary { background: #e5e7eb; color: #333; }
-    .post-list { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
-    .post-item { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
-    .post-item:last-child { border-bottom: none; }
-    .post-title { font-weight: 600; color: #333; }
-    .editor { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .editor input, .editor textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 14px; font-family: inherit; }
-    .editor textarea { min-height: 400px; resize: vertical; }
-    .editor label { font-weight: 600; color: #555; margin-bottom: 4px; display: block; }
-    .actions { display: flex; gap: 10px; margin-top: 16px; }
-    .hidden { display: none; }
-    .msg { padding: 12px; border-radius: 8px; margin-bottom: 16px; }
-    .msg-ok { background: #d1fae5; color: #065f46; }
-    .msg-err { background: #fee2e2; color: #991b1b; }
-    .loading { text-align: center; padding: 40px; color: #999; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333}
+    .login-box{max-width:400px;margin:100px auto;background:#fff;padding:40px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.1);text-align:center}
+    .login-box h2{margin-bottom:16px}.login-box p{color:#666;margin-bottom:20px}
+    .login-box input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:16px;font-size:14px}
+    .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;margin:2px}
+    .btn-primary{background:#6366f1;color:#fff}.btn-danger{background:#ef4444;color:#fff}
+    .btn-secondary{background:#e5e7eb;color:#333}.btn-success{background:#10b981;color:#fff}
+    .btn-sm{padding:6px 14px;font-size:13px}
+    .main{display:flex;min-height:100vh}
+    .sidebar{width:220px;background:#1e1e2e;color:#cdd6f4;padding:20px 0;flex-shrink:0}
+    .sidebar h2{padding:0 20px 20px;font-size:18px;color:#cba6f7}
+    .sidebar a{display:block;padding:12px 20px;color:#cdd6f4;text-decoration:none;font-size:14px;cursor:pointer}
+    .sidebar a:hover,.sidebar a.active{background:#313244;color:#fff}
+    .content{flex:1;padding:30px;overflow-y:auto}
+    .card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:20px}
+    .card h3{margin-bottom:16px;color:#333;font-size:18px}
+    .post-item{padding:14px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+    .post-item:last-child{border-bottom:none}
+    .post-title{font-weight:600;color:#333}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-weight:600;color:#555;margin-bottom:6px;font-size:14px}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;font-family:inherit}
+    .form-group textarea{min-height:300px;resize:vertical;font-family:"JetBrains Mono",monospace;font-size:13px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .hidden{display:none}
+    .msg{padding:12px;border-radius:8px;margin-bottom:16px;font-size:14px}
+    .msg-ok{background:#d1fae5;color:#065f46}.msg-err{background:#fee2e2;color:#991b1b}
+    .tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+    .tabs .btn{font-size:13px;padding:8px 16px}
+    .tabs .btn.active{background:#6366f1;color:#fff}
+    .loading{text-align:center;padding:40px;color:#999}
+    .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;background:#e5e7eb;color:#555;margin-left:8px}
   </style>
 </head>
 <body>
@@ -45,108 +49,177 @@
     <h2>&#128274; Blog Admin</h2>
     <p>Enter GitHub Token to login</p>
     <input type="password" id="tokenInput" placeholder="ghp_xxxx" />
-    <button onclick="doLogin()">Login</button>
-    <p id="loginErr" style="color:red;margin-top:10px;" class="hidden"></p>
+    <button class="btn btn-primary" style="width:100%;padding:12px" onclick="doLogin()">Login</button>
+    <p id="loginErr" style="color:red;margin-top:10px" class="hidden"></p>
   </div>
 
-  <div id="dashboardView" class="dashboard hidden">
-    <div class="header">
-      <h1>&#128221; Posts</h1>
-      <div>
-        <button class="btn btn-primary" onclick="showEditor()">+ New Post</button>
-        <button class="btn btn-secondary" onclick="logout()">Logout</button>
+  <div id="appView" class="hidden">
+    <div class="main">
+      <div class="sidebar">
+        <h2>&#129668; Firefly</h2>
+        <a onclick="switchPage('posts')" id="nav-posts" class="active">&#128221; Posts</a>
+        <a onclick="switchPage('settings')" id="nav-settings">&#9881; Settings</a>
+        <a onclick="switchPage('profile')" id="nav-profile">&#128100; Profile</a>
+        <a onclick="switchPage('layout')" id="nav-layout">&#127912; Layout</a>
+        <a onclick="switchPage('nav')" id="nav-nav">&#128196; Navigation</a>
+        <a onclick="logout()" style="margin-top:auto;color:#f38ba8">&#128682; Logout</a>
       </div>
-    </div>
-    <div id="msg" class="hidden"></div>
-    <div id="postList" class="post-list"><div class="loading">Loading...</div></div>
-  </div>
+      <div class="content">
+        <!-- Posts Page -->
+        <div id="page-posts">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <h2>&#128221; Posts</h2>
+            <button class="btn btn-primary" onclick="showPostEditor()">+ New Post</button>
+          </div>
+          <div id="msg-posts" class="hidden"></div>
+          <div class="card"><div id="postList"><div class="loading">Loading...</div></div></div>
+        </div>
 
-  <div id="editorView" class="dashboard hidden">
-    <div class="editor">
-      <h2 style="margin-bottom:20px;">&#9997; <span id="editorTitle">New Post</span></h2>
-      <div id="editorMsg" class="hidden"></div>
-      <label>Title</label>
-      <input type="text" id="postTitle" placeholder="Post title" />
-      <label>Slug (English filename)</label>
-      <input type="text" id="postSlug" placeholder="my-first-post" />
-      <label>Date</label>
-      <input type="date" id="postDate" />
-      <label>Description</label>
-      <input type="text" id="postDesc" placeholder="Short description" />
-      <label>Tags (comma separated)</label>
-      <input type="text" id="postTags" placeholder="tech, life" />
-      <label>Content (Markdown)</label>
-      <textarea id="postBody" placeholder="Write your post here..."></textarea>
-      <div class="actions">
-        <button class="btn btn-primary" onclick="savePost()">Save</button>
-        <button class="btn btn-secondary" onclick="showDashboard()">Back</button>
+        <!-- Post Editor -->
+        <div id="page-editor" class="hidden">
+          <h2 style="margin-bottom:20px">&#9997; <span id="editorTitle">New Post</span></h2>
+          <div id="msg-editor" class="hidden"></div>
+          <div class="card">
+            <div class="form-row">
+              <div class="form-group"><label>Title</label><input type="text" id="postTitle" /></div>
+              <div class="form-group"><label>Slug</label><input type="text" id="postSlug" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Date</label><input type="date" id="postDate" /></div>
+              <div class="form-group"><label>Category</label><input type="text" id="postCat" /></div>
+            </div>
+            <div class="form-group"><label>Description</label><input type="text" id="postDesc" /></div>
+            <div class="form-group"><label>Tags (comma)</label><input type="text" id="postTags" /></div>
+            <div class="form-group"><label>Content (Markdown)</label><textarea id="postBody"></textarea></div>
+            <div>
+              <button class="btn btn-primary" onclick="savePost()">Save</button>
+              <button class="btn btn-secondary" onclick="switchPage('posts')">Back</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="page-settings" class="hidden">
+          <h2 style="margin-bottom:20px">&#9881; Site Settings</h2>
+          <div id="msg-settings" class="hidden"></div>
+          <div class="card">
+            <div class="form-group"><label>Site Title</label><input type="text" id="siteTitle" /></div>
+            <div class="form-group"><label>Site Description</label><input type="text" id="siteDesc" /></div>
+            <div class="form-group"><label>Site URL</label><input type="text" id="siteUrl" /></div>
+            <div class="form-row">
+              <div class="form-group"><label>Language</label>
+                <select id="siteLang"><option value="zh_CN">Chinese</option><option value="en">English</option><option value="ja">Japanese</option></select>
+              </div>
+              <div class="form-group"><label>Theme Hue (0-360)</label><input type="number" id="siteHue" min="0" max="360" /></div>
+            </div>
+            <div class="form-group"><label>Banner Image URL</label><input type="text" id="siteBanner" /></div>
+            <button class="btn btn-primary" onclick="saveSiteConfig()">Save Settings</button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>siteConfig.ts (Raw)</h3>
+            <div class="form-group"><textarea id="siteConfigRaw" style="min-height:500px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('siteConfig')">Save Raw</button>
+          </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="page-profile" class="hidden">
+          <h2 style="margin-bottom:20px">&#128100; Profile</h2>
+          <div id="msg-profile" class="hidden"></div>
+          <div class="card">
+            <div class="form-group"><label>Display Name</label><input type="text" id="profName" /></div>
+            <div class="form-group"><label>Bio</label><input type="text" id="profBio" /></div>
+            <div class="form-group"><label>Avatar URL</label><input type="text" id="profAvatar" /></div>
+            <div class="form-group"><label>Links (name=url, one per line)</label><textarea id="profLinks" style="min-height:100px"></textarea></div>
+            <button class="btn btn-primary" onclick="saveProfileConfig()">Save Profile</button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>profileConfig.ts (Raw)</h3>
+            <div class="form-group"><textarea id="profileConfigRaw" style="min-height:400px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('profileConfig')">Save Raw</button>
+          </div>
+        </div>
+
+        <!-- Layout Page -->
+        <div id="page-layout" class="hidden">
+          <h2 style="margin-bottom:20px">&#127912; Layout</h2>
+          <div id="msg-layout" class="hidden"></div>
+          <div class="card">
+            <h3>sidebarConfig.ts</h3>
+            <div class="form-group"><textarea id="sidebarConfigRaw" style="min-height:400px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('sidebarConfig')">Save</button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>fontConfig.ts</h3>
+            <div class="form-group"><textarea id="fontConfigRaw" style="min-height:300px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('fontConfig')">Save</button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>effectsConfig.ts</h3>
+            <div class="form-group"><textarea id="effectsConfigRaw" style="min-height:300px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('effectsConfig')">Save</button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>footerConfig.ts</h3>
+            <div class="form-group"><textarea id="footerConfigRaw" style="min-height:200px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('footerConfig')">Save</button>
+          </div>
+        </div>
+
+        <!-- Navigation Page -->
+        <div id="page-nav" class="hidden">
+          <h2 style="margin-bottom:20px">&#128196; Navigation</h2>
+          <div id="msg-nav" class="hidden"></div>
+          <div class="card">
+            <h3>navBarConfig.ts</h3>
+            <div class="form-group"><textarea id="navConfigRaw" style="min-height:300px"></textarea></div>
+            <button class="btn btn-success" onclick="saveRawConfig('navBarConfig')">Save</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script is:inline>
-    const REPO = "xiaochai777/Firefly";
-    const BRANCH = "master";
-    const POSTS_PATH = "src/content/posts";
-    let currentToken = localStorage.getItem("gh_token");
-    let editingFile = null;
+    var REPO = "xiaochai777/Firefly";
+    var BRANCH = "master";
+    var POSTS_PATH = "src/content/posts";
+    var CONFIG_PATH = "src/config";
+    var currentToken = localStorage.getItem("gh_token");
+    var editingFile = null;
+    var configCache = {};
+    var currentPage = "posts";
 
-    if (currentToken) showDashboard();
+    if (currentToken) showApp();
 
     function doLogin() {
-      const token = document.getElementById("tokenInput").value.trim();
+      var token = document.getElementById("tokenInput").value.trim();
       if (!token) return;
-      fetch("https://api.github.com/user", {
-        headers: { "Authorization": "token " + token }
-      }).then(function(r) {
-        if (!r.ok) throw new Error("Invalid token");
-        return r.json();
-      }).then(function(user) {
-        localStorage.setItem("gh_token", token);
-        currentToken = token;
-        showDashboard();
-      }).catch(function(e) {
-        var el = document.getElementById("loginErr");
-        el.textContent = e.message;
-        el.classList.remove("hidden");
-      });
+      fetch("https://api.github.com/user", { headers: { "Authorization": "token " + token } })
+        .then(function(r) { if (!r.ok) throw new Error("Invalid token"); return r.json(); })
+        .then(function() { localStorage.setItem("gh_token", token); currentToken = token; showApp(); })
+        .catch(function(e) { var el = document.getElementById("loginErr"); el.textContent = e.message; el.classList.remove("hidden"); });
     }
 
-    function logout() {
-      localStorage.removeItem("gh_token");
-      currentToken = null;
-      location.reload();
-    }
+    function logout() { localStorage.removeItem("gh_token"); currentToken = null; location.reload(); }
 
-    function showDashboard() {
+    function showApp() {
       document.getElementById("loginView").classList.add("hidden");
-      document.getElementById("editorView").classList.add("hidden");
-      document.getElementById("dashboardView").classList.remove("hidden");
+      document.getElementById("appView").classList.remove("hidden");
       loadPosts();
+      loadConfigs();
     }
 
-    function showEditor(file) {
-      editingFile = file || null;
-      document.getElementById("dashboardView").classList.add("hidden");
-      document.getElementById("editorView").classList.remove("hidden");
-      document.getElementById("editorTitle").textContent = file ? "Edit Post" : "New Post";
-      if (file) {
-        document.getElementById("postTitle").value = file.title || "";
-        document.getElementById("postSlug").value = file.name.replace(".md", "");
-        document.getElementById("postSlug").disabled = true;
-        document.getElementById("postDate").value = file.published || "";
-        document.getElementById("postDesc").value = file.description || "";
-        document.getElementById("postTags").value = (file.tags || []).join(", ");
-        document.getElementById("postBody").value = file.body || "";
-      } else {
-        document.getElementById("postTitle").value = "";
-        document.getElementById("postSlug").value = "";
-        document.getElementById("postSlug").disabled = false;
-        document.getElementById("postDate").value = new Date().toISOString().split("T")[0];
-        document.getElementById("postDesc").value = "";
-        document.getElementById("postTags").value = "";
-        document.getElementById("postBody").value = "";
-      }
+    function switchPage(page) {
+      currentPage = page;
+      ["posts","editor","settings","profile","layout","nav"].forEach(function(p) {
+        var el = document.getElementById("page-" + p);
+        if (el) el.classList.toggle("hidden", p !== page);
+      });
+      ["posts","settings","profile","layout","nav"].forEach(function(n) {
+        var nav = document.getElementById("nav-" + n);
+        if (nav) nav.classList.toggle("active", n === page);
+      });
     }
 
     function showMsg(id, text, ok) {
@@ -154,119 +227,160 @@
       el.textContent = text;
       el.className = "msg " + (ok ? "msg-ok" : "msg-err");
       el.classList.remove("hidden");
-      setTimeout(function() { el.classList.add("hidden"); }, 3000);
+      setTimeout(function() { el.classList.add("hidden"); }, 4000);
     }
 
     function api(path, method, body) {
-      var opts = {
-        method: method || "GET",
-        headers: {
-          "Authorization": "token " + currentToken,
-          "Accept": "application/vnd.github.v3+json"
-        }
-      };
+      var opts = { method: method || "GET", headers: { "Authorization": "token " + currentToken, "Accept": "application/vnd.github.v3+json" } };
       if (body) opts.body = JSON.stringify(body);
       return fetch("https://api.github.com/repos/" + REPO + "/contents/" + path, opts)
-        .then(function(r) {
-          if (!r.ok) return r.json().then(function(e) { throw new Error(e.message); });
-          return r.json();
-        });
+        .then(function(r) { if (!r.ok) return r.json().then(function(e) { throw new Error(e.message); }); return r.json(); });
     }
 
     function loadPosts() {
       api(POSTS_PATH).then(function(files) {
         var mdFiles = files.filter(function(f) { return f.name.endsWith(".md") && f.name !== "_draft.md"; });
-        var listEl = document.getElementById("postList");
-        if (mdFiles.length === 0) {
-          listEl.innerHTML = '<div class="loading">No posts yet. Click "+ New Post" to start!</div>';
-          return;
-        }
+        var el = document.getElementById("postList");
+        if (mdFiles.length === 0) { el.innerHTML = '<div class="loading">No posts yet</div>'; return; }
         var html = "";
         mdFiles.forEach(function(f) {
-          html += '<div class="post-item"><div class="post-title">' + f.name.replace(".md","") + '</div><div><button class="btn btn-secondary" onclick="editPost(\'' + f.path + '\',\'' + f.sha + '\')">Edit</button> <button class="btn btn-danger" onclick="deletePost(\'' + f.path + '\',\'' + f.sha + '\',\'' + f.name + '\')">Delete</button></div></div>';
+          html += '<div class="post-item"><div><span class="post-title">' + f.name.replace(".md","") + '</span></div><div><button class="btn btn-secondary btn-sm" onclick="editPost(\'' + f.path + '\',\'' + f.sha + '\')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deletePost(\'' + f.path + '\',\'' + f.sha + '\',\'' + f.name + '\')">Delete</button></div></div>';
         });
-        listEl.innerHTML = html;
-      }).catch(function(e) {
-        document.getElementById("postList").innerHTML = '<div class="msg msg-err">Error: ' + e.message + '</div>';
-      });
+        el.innerHTML = html;
+      }).catch(function(e) { document.getElementById("postList").innerHTML = '<div class="msg msg-err">' + e.message + '</div>'; });
+    }
+
+    function showPostEditor(file) {
+      editingFile = file || null;
+      switchPage("editor");
+      document.getElementById("editorTitle").textContent = file ? "Edit Post" : "New Post";
+      if (file) {
+        document.getElementById("postTitle").value = file.title || "";
+        document.getElementById("postSlug").value = file.name.replace(".md","");
+        document.getElementById("postSlug").disabled = true;
+        document.getElementById("postDate").value = file.published || "";
+        document.getElementById("postDesc").value = file.description || "";
+        document.getElementById("postCat").value = file.category || "";
+        document.getElementById("postTags").value = (file.tags || []).join(", ");
+        document.getElementById("postBody").value = file.body || "";
+      } else {
+        ["postTitle","postSlug","postDesc","postCat","postTags","postBody"].forEach(function(id) { document.getElementById(id).value = ""; });
+        document.getElementById("postSlug").disabled = false;
+        document.getElementById("postDate").value = new Date().toISOString().split("T")[0];
+      }
     }
 
     function editPost(path, sha) {
       api(path).then(function(data) {
         var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
         var match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-        var title = "", published = "", description = "", tags = [], body = content;
+        var title="",published="",description="",tags=[],category="",body=content;
         if (match) {
-          var fm = match[1];
-          body = match[2];
-          var t = fm.match(/title:\s*"?([^"\n]+)"?/);
-          var p = fm.match(/published:\s*(.+)/);
-          var d = fm.match(/description:\s*"?([^"\n]+)"?/);
-          var tg = fm.match(/tags:\s*\[([^\]]*)\]/);
-          if (t) title = t[1].trim();
-          if (p) published = p[1].trim();
-          if (d) description = d[1].trim();
-          if (tg) tags = tg[1].split(",").map(function(s) { return s.trim().replace(/"/g,""); });
+          var fm = match[1]; body = match[2];
+          var t=fm.match(/title:\s*"?([^"\n]+)"?/),p=fm.match(/published:\s*(.+)/),d=fm.match(/description:\s*"?([^"\n]+)"?/),tg=fm.match(/tags:\s*\[([^\]]*)\]/),c=fm.match(/category:\s*"?([^"\n]+)"?/);
+          if(t)title=t[1].trim();if(p)published=p[1].trim();if(d)description=d[1].trim();if(c)category=c[1].trim();
+          if(tg)tags=tg[1].split(",").map(function(s){return s.trim().replace(/"/g,"");});
         }
-        showEditor({ name: path.split("/").pop(), title: title, published: published, description: description, tags: tags, body: body, sha: sha, path: path });
-      }).catch(function(e) {
-        showMsg("msg", "Error: " + e.message, false);
-      });
+        showPostEditor({name:path.split("/").pop(),title:title,published:published,description:description,tags:tags,category:category,body:body,sha:sha,path:path});
+      }).catch(function(e){showMsg("msg-editor","Error: "+e.message,false);});
     }
 
     function savePost() {
-      var title = document.getElementById("postTitle").value.trim();
-      var slug = document.getElementById("postSlug").value.trim();
-      var date = document.getElementById("postDate").value;
-      var desc = document.getElementById("postDesc").value.trim();
-      var tags = document.getElementById("postTags").value.trim();
-      var body = document.getElementById("postBody").value;
-      if (!title || !slug) { showMsg("editorMsg", "Title and slug required", false); return; }
-
-      var tagsYaml = tags ? "[" + tags.split(",").map(function(t) { return '"' + t.trim() + '"'; }).join(", ") + "]" : "[]";
-      var raw = '---\ntitle: "' + title + '"\npublished: ' + date + '\ndescription: "' + desc + '"\ntags: ' + tagsYaml + '\n---\n' + body;
-      var encoded = btoa(unescape(encodeURIComponent(raw)));
-
-      var filePath = POSTS_PATH + "/" + slug + ".md";
-      var sha = editingFile ? editingFile.sha : null;
-
-      var doSave = function() {
-        var payload = { message: (editingFile ? "update" : "new post") + ": " + title, content: encoded };
-        if (sha) payload.sha = sha;
-        return api(filePath, "PUT", payload);
-      };
-
-      if (!sha) {
-        api(filePath).then(function(existing) { sha = existing.sha; }).catch(function() {}).then(doSave);
-      } else {
-        doSave().then(function() {
-          showMsg("editorMsg", "Saved!", true);
-          editingFile = null;
-          setTimeout(showDashboard, 1000);
-        }).catch(function(e) {
-          showMsg("editorMsg", "Error: " + e.message, false);
-        });
-        return;
-      }
-
-      setTimeout(function() {
-        doSave().then(function() {
-          showMsg("editorMsg", "Saved!", true);
-          editingFile = null;
-          setTimeout(showDashboard, 1000);
-        }).catch(function(e) {
-          showMsg("editorMsg", "Error: " + e.message, false);
-        });
-      }, 500);
+      var title=document.getElementById("postTitle").value.trim(),slug=document.getElementById("postSlug").value.trim();
+      var date=document.getElementById("postDate").value,desc=document.getElementById("postDesc").value.trim();
+      var cat=document.getElementById("postCat").value.trim(),tags=document.getElementById("postTags").value.trim(),body=document.getElementById("postBody").value;
+      if(!title||!slug){showMsg("msg-editor","Title and slug required",false);return;}
+      var tagsYaml=tags?"["+tags.split(",").map(function(t){return'"'+t.trim()+'"'}).join(", "+"]":"[]";
+      var raw='---\ntitle: "'+title+'"\npublished: '+date+'\ndescription: "'+desc+'"\ncategory: "'+cat+'"\ntags: '+tagsYaml+'\n---\n'+body;
+      var encoded=btoa(unescape(encodeURIComponent(raw)));
+      var filePath=POSTS_PATH+"/"+slug+".md";
+      var sha=editingFile?editingFile.sha:null;
+      var doSave=function(){var payload={message:(editingFile?"update":"new post")+": "+title,content:encoded};if(sha)payload.sha=sha;return api(filePath,"PUT",payload);};
+      if(!sha){api(filePath).then(function(ex){sha=ex.sha;}).catch(function(){}).then(function(){doSave().then(function(){showMsg("msg-editor","Saved!",true);setTimeout(function(){switchPage("posts");loadPosts();},1000);}).catch(function(e){showMsg("msg-editor","Error: "+e.message,false);});});}
+      else{doSave().then(function(){showMsg("msg-editor","Saved!",true);setTimeout(function(){switchPage("posts");loadPosts();},1000);}).catch(function(e){showMsg("msg-editor","Error: "+e.message,false);});}
     }
 
-    function deletePost(path, sha, name) {
-      if (!confirm("Delete " + name + "?")) return;
-      api(path, "DELETE", { message: "delete: " + name, sha: sha }).then(function() {
-        showMsg("msg", "Deleted!", true);
-        loadPosts();
+    function deletePost(path,sha,name){if(!confirm("Delete "+name+"?"))return;api(path,"DELETE",{message:"delete: "+name,sha:sha}).then(function(){showMsg("msg-posts","Deleted!",true);loadPosts();}).catch(function(e){showMsg("msg-posts","Error: "+e.message,false);});}
+
+    function loadConfigs() {
+      var configs = ["siteConfig","profileConfig","sidebarConfig","fontConfig","effectsConfig","footerConfig","navBarConfig"];
+      configs.forEach(function(name) {
+        api(CONFIG_PATH + "/" + name + ".ts").then(function(data) {
+          var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
+          configCache[name] = { content: content, sha: data.sha };
+          var rawEl = document.getElementById(name + "Raw");
+          if (rawEl) rawEl.value = content;
+          // Parse site config
+          if (name === "siteConfig") parseSiteConfig(content);
+          if (name === "profileConfig") parseProfileConfig(content);
+        }).catch(function() {});
+      });
+    }
+
+    function parseSiteConfig(c) {
+      var t=c.match(/siteTitle[^"]*"([^"]*)"/),d=c.match(/siteDesc[^"]*"([^"]*)"/),u=c.match(/site_url[^"]*"([^"]*)"/);
+      var l=c.match(/SITE_LANG\s*=\s*"([^"]*)"/),h=c.match(/themeHue:\s*(\d+)/),b=c.match(/banner.*?"(http[^"]*)"/);
+      if(t)document.getElementById("siteTitle").value=t[1];if(d)document.getElementById("siteDesc").value=d[1];
+      if(u)document.getElementById("siteUrl").value=u[1];if(l)document.getElementById("siteLang").value=l[1];
+      if(h)document.getElementById("siteHue").value=h[1];if(b)document.getElementById("siteBanner").value=b[1];
+    }
+
+    function parseProfileConfig(c) {
+      var n=c.match(/name[^"]*"([^"]*)"/),b=c.match(/bio[^"]*"([^"]*)"/),a=c.match(/avatar.*?"(http[^"]*)"/);
+      if(n)document.getElementById("profName").value=n[1];if(b)document.getElementById("profBio").value=b[1];
+      if(a)document.getElementById("profAvatar").value=a[1];
+    }
+
+    function saveSiteConfig() {
+      var c = configCache.siteConfig;
+      if (!c) { showMsg("msg-settings","Config not loaded",false); return; }
+      var txt = c.content;
+      var title = document.getElementById("siteTitle").value;
+      var desc = document.getElementById("siteDesc").value;
+      var url = document.getElementById("siteUrl").value;
+      var lang = document.getElementById("siteLang").value;
+      var hue = document.getElementById("siteHue").value;
+      txt = txt.replace(/(siteTitle[^"]*")[^"]*(")/, "$1" + title + "$2");
+      txt = txt.replace(/(siteDesc[^"]*")[^"]*(")/, "$1" + desc + "$2");
+      txt = txt.replace(/(site_url[^"]*")[^"]*(")/, "$1" + url + "$2");
+      txt = txt.replace(/(SITE_LANG\s*=\s*")[^"]*(")/, "$1" + lang + "$2");
+      txt = txt.replace(/(themeHue:\s*)\d+/, "$1" + hue);
+      saveConfigFile("siteConfig", txt, "msg-settings");
+    }
+
+    function saveProfileConfig() {
+      var c = configCache.profileConfig;
+      if (!c) { showMsg("msg-profile","Config not loaded",false); return; }
+      var txt = c.content;
+      var name = document.getElementById("profName").value;
+      var bio = document.getElementById("profBio").value;
+      var avatar = document.getElementById("profAvatar").value;
+      txt = txt.replace(/(name[^"]*")[^"]*(")/, "$1" + name + "$2");
+      txt = txt.replace(/(bio[^"]*")[^"]*(")/, "$1" + bio + "$2");
+      txt = txt.replace(/(avatar.*?")[^"]*(")/, "$1" + avatar + "$2");
+      saveConfigFile("profileConfig", txt, "msg-profile");
+    }
+
+    function saveRawConfig(name) {
+      var rawEl = document.getElementById(name + "Raw");
+      if (!rawEl) return;
+      var msgId = name === "navBarConfig" ? "msg-nav" : "msg-layout";
+      saveConfigFile(name, rawEl.value, msgId);
+    }
+
+    function saveConfigFile(name, content, msgId) {
+      var c = configCache[name];
+      if (!c) { showMsg(msgId, "Not loaded", false); return; }
+      var encoded = btoa(unescape(encodeURIComponent(content)));
+      api(CONFIG_PATH + "/" + name + ".ts", "PUT", {
+        message: "update: " + name,
+        content: encoded,
+        sha: c.sha
+      }).then(function() {
+        configCache[name].content = content;
+        showMsg(msgId, "Saved!", true);
       }).catch(function(e) {
-        showMsg("msg", "Error: " + e.message, false);
+        showMsg(msgId, "Error: " + e.message, false);
       });
     }
   </script>

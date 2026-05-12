@@ -1,5 +1,5 @@
 ---
-// Admin CMS page
+// Admin CMS page - 使用 Static CMS
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -10,57 +10,40 @@
   <title>博客管理后台</title>
 </head>
 <body>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/@staticcms/app@^4.0.0/dist/staticcms-app.js"></script>
   <script is:inline>
-    // 使用 GitHub Token 直接认证
-    var GITHUB_TOKEN = localStorage.getItem("decap-cms-token");
-    
-    if (!GITHUB_TOKEN) {
-      GITHUB_TOKEN = prompt("请输入你的 GitHub Token (ghp_开头):");
-      if (GITHUB_TOKEN) {
-        localStorage.setItem("decap-cms-token", GITHUB_TOKEN);
+    CMS.init({
+      config: {
+        backend: {
+          name: "github",
+          repo: "xiaochai777/Firefly",
+          branch: "master",
+          auth_type: "token",
+          base_url: "https://firefly-red.vercel.app"
+        },
+        media_folder: "src/content/posts/images",
+        public_folder: "/posts/images",
+        collections: [{
+          name: "posts",
+          label: "文章",
+          folder: "src/content/posts",
+          create: true,
+          slug: "{{slug}}",
+          path: "{{slug}}",
+          media_folder: "images",
+          public_folder: "./images",
+          fields: [
+            {label: "标题", name: "title", widget: "string"},
+            {label: "发布日期", name: "published", widget: "datetime"},
+            {label: "描述", name: "description", widget: "string", required: false},
+            {label: "封面图", name: "image", widget: "image", required: false},
+            {label: "标签", name: "tags", widget: "list", required: false},
+            {label: "分类", name: "category", widget: "string", required: false},
+            {label: "正文", name: "body", widget: "markdown"}
+          ]
+        }]
       }
-    }
-    
-    window.CMS_CONFIG = {
-      backend: {
-        name: "github",
-        repo: "xiaochai777/Firefly",
-        branch: "master",
-        auth_type: "token",
-        token: GITHUB_TOKEN
-      },
-      media_folder: "src/content/posts/images",
-      public_folder: "/posts/images",
-      collections: [{
-        name: "posts",
-        label: "文章",
-        folder: "src/content/posts",
-        create: true,
-        slug: "{{slug}}",
-        path: "{{slug}}",
-        media_folder: "images",
-        public_folder: "./images",
-        fields: [
-          {label: "标题", name: "title", widget: "string"},
-          {label: "发布日期", name: "published", widget: "datetime"},
-          {label: "描述", name: "description", widget: "string", required: false},
-          {label: "封面图", name: "image", widget: "image", required: false},
-          {label: "标签", name: "tags", widget: "list", required: false},
-          {label: "分类", name: "category", widget: "string", required: false},
-          {label: "正文", name: "body", widget: "markdown"}
-        ]
-      }]
-    };
-    
-    window.CMS_MANUAL_INIT = true;
-  </script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script is:inline>
-    if (GITHUB_TOKEN) {
-      CMS.init({config: window.CMS_CONFIG});
-    } else {
-      document.body.innerHTML = "<h2>需要 GitHub Token 才能使用</h2><p>请刷新页面并输入 Token</p>";
-    }
+    });
   </script>
 </body>
 </html>
